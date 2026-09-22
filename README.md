@@ -1,157 +1,117 @@
 # Smart Interview Prep (Mini Hyrise)
 
-AI-Powered Interview Preparation Platform built with the **MEAN** stack + Generative AI.
+**Full-stack AI-Powered Interview Preparation Platform** built with the MEAN stack.
 
-## Features
+> Angular (Frontend) + Node.js/Express (Backend) + MongoDB + OpenAI/Groq
 
-- JWT Authentication (Register / Login)
-- Role-based Question Generation using AI
-- Answer Evaluation with Score + Detailed Feedback (AI)
-- Attempt History with full CRUD
-- Dashboard-ready endpoints (scores, history)
-- Rate limiting, Helmet, CORS, input validation
+## Live Features
 
-## Tech Stack
-
-| Layer       | Technology              |
-|-------------|-------------------------|
-| Backend     | Node.js + Express       |
-| Database    | MongoDB + Mongoose      |
-| Auth        | JWT + bcrypt            |
-| AI          | OpenAI or Groq          |
-| Validation  | Zod                     |
+- User Authentication (JWT Register / Login)
+- AI Question Generator based on Role + Level
+- AI Answer Evaluation (Score + Strengths + Improvements + Sample Answer)
+- Dashboard with stats
+- Full Attempt History with CRUD
+- Modern dark UI
 
 ## Project Structure
 
 ```
-src/
-├── config/
-│   └── db.js
-├── controllers/
-│   ├── authController.js
-│   ├── questionController.js
-│   └── attemptController.js
-├── middleware/
-│   ├── auth.js
-│   └── errorHandler.js
-├── models/
-│   ├── User.js
-│   └── Attempt.js
-├── routes/
-│   ├── auth.js
-│   ├── questions.js
-│   └── attempts.js
-├── services/
-│   └── aiService.js
-├── app.js
-└── server.js
+smart-interview-prep/
+├── frontend/                 # Angular 18 Application
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── core/         # Services, Guards, Interceptors
+│   │   │   ├── pages/        # Login, Register, Dashboard, Practice, History
+│   │   │   └── shared/       # Navbar
+│   │   └── environments/
+│   └── package.json
+│
+├── src/                      # Node.js Backend
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── services/             # AI Service (OpenAI / Groq)
+│   ├── app.js
+│   └── server.js
+│
+├── package.json              # Backend dependencies
+├── .env.example
+└── README.md
 ```
 
 ## Quick Start
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/SanthoshKumar020/smart-interview-prep.git
-   cd smart-interview-prep
-   ```
+### 1. Backend Setup
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```bash
+# Install backend dependencies
+npm install
 
-3. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your MongoDB URI, JWT secret and AI API key
-   ```
+# Configure environment
+cp .env.example .env
+# Edit .env → add MONGODB_URI, JWT_SECRET, and OPENAI_API_KEY or GROQ_API_KEY
 
-4. **Run the server**
-   ```bash
-   npm run dev     # development (nodemon)
-   npm start       # production
-   ```
+# Start backend
+npm run dev
+# → http://localhost:5000
+```
 
-Server will start on `http://localhost:5000`
+### 2. Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm start
+# → http://localhost:4200
+```
+
+### 3. Open the App
+
+Go to **http://localhost:4200**
+
+1. Register a new account
+2. Go to **Practice**
+3. Enter a role (e.g. "Data Engineer")
+4. Generate questions → Answer → Get AI feedback
+5. Check Dashboard & History
 
 ## API Endpoints
 
-### Authentication
-| Method | Endpoint              | Description          | Auth |
-|--------|-----------------------|----------------------|------|
-| POST   | `/api/auth/register`  | Register new user    | No   |
-| POST   | `/api/auth/login`     | Login                | No   |
-| GET    | `/api/auth/me`        | Get current user     | Yes  |
+| Method | Endpoint                  | Description                     | Auth |
+|--------|---------------------------|---------------------------------|------|
+| POST   | `/api/auth/register`      | Register                        | No   |
+| POST   | `/api/auth/login`         | Login                           | No   |
+| GET    | `/api/auth/me`            | Current user                    | Yes  |
+| POST   | `/api/questions/generate` | Generate questions              | Yes  |
+| POST   | `/api/attempts`           | Submit answer + AI evaluation   | Yes  |
+| GET    | `/api/attempts`           | Get attempt history             | Yes  |
+| GET    | `/api/attempts/stats`     | Dashboard statistics            | Yes  |
+| GET    | `/api/attempts/:id`       | Single attempt                  | Yes  |
+| PUT    | `/api/attempts/:id`       | Update answer + re-evaluate     | Yes  |
+| DELETE | `/api/attempts/:id`       | Delete attempt                  | Yes  |
 
-### Questions
-| Method | Endpoint                    | Description                | Auth |
-|--------|-----------------------------|----------------------------|------|
-| POST   | `/api/questions/generate`   | Generate interview questions | Yes |
-
-### Attempts
-| Method | Endpoint                | Description                     | Auth |
-|--------|-------------------------|---------------------------------|------|
-| POST   | `/api/attempts`         | Submit answer + get AI feedback | Yes  |
-| GET    | `/api/attempts`         | Get all attempts of user        | Yes  |
-| GET    | `/api/attempts/:id`     | Get single attempt              | Yes  |
-| PUT    | `/api/attempts/:id`     | Update answer + re-evaluate     | Yes  |
-| DELETE | `/api/attempts/:id`     | Delete attempt                  | Yes  |
-| GET    | `/api/attempts/stats`   | Dashboard stats                 | Yes  |
-
-## Example Requests
-
-### Register
-```http
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-
-### Generate Questions
-```http
-POST /api/questions/generate
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "role": "Data Engineer",
-  "level": "mid",
-  "count": 5,
-  "topics": ["SQL", "Spark", "Airflow"]
-}
-```
-
-### Submit Answer
-```http
-POST /api/attempts
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "role": "Data Engineer",
-  "question": "Explain the difference between batch and stream processing.",
-  "userAnswer": "Batch processing handles large volumes of data at once..."
-}
-```
-
-## AI Configuration
-
-You can use either **OpenAI** or **Groq**:
+## Environment Variables
 
 ```env
-# OpenAI
-AI_PROVIDER=openai
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/smart-interview-prep
+JWT_SECRET=your_secret_key
+AI_PROVIDER=openai          # or "groq"
 OPENAI_API_KEY=sk-...
-
-# OR Groq (faster + cheaper)
-AI_PROVIDER=groq
-GROQ_API_KEY=gsk_...
+# GROQ_API_KEY=gsk_...
 ```
+
+## Interview Talking Points
+
+- Full MEAN stack implementation
+- JWT authentication with protected routes
+- AI integration (prompt engineering + structured JSON output)
+- Clean separation of concerns (services, controllers, models)
+- Angular standalone components + signals + functional interceptors/guards
+- MongoDB indexing strategy
+- Error handling & rate limiting
 
 ## Author
 
