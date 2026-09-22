@@ -1,117 +1,131 @@
 # Smart Interview Prep (Mini Hyrise)
 
-**Full-stack AI-Powered Interview Preparation Platform** built with the MEAN stack.
+**Full-stack AI-Powered Interview Preparation Platform**
 
-> Angular (Frontend) + Node.js/Express (Backend) + MongoDB + OpenAI/Groq
+Angular + Node.js + Express + MongoDB + OpenAI/Groq
 
-## Live Features
-
-- User Authentication (JWT Register / Login)
-- AI Question Generator based on Role + Level
-- AI Answer Evaluation (Score + Strengths + Improvements + Sample Answer)
-- Dashboard with stats
-- Full Attempt History with CRUD
-- Modern dark UI
+---
 
 ## Project Structure
 
 ```
 smart-interview-prep/
-├── frontend/                 # Angular 18 Application
+├── frontend/                  # Angular 18 Application
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── core/         # Services, Guards, Interceptors
-│   │   │   ├── pages/        # Login, Register, Dashboard, Practice, History
-│   │   │   └── shared/       # Navbar
+│   │   │   ├── core/          # Auth service, API service, guards, interceptors
+│   │   │   ├── pages/         # Login, Register, Dashboard, Practice, History
+│   │   │   └── shared/        # Navbar
 │   │   └── environments/
 │   └── package.json
 │
-├── src/                      # Node.js Backend
-│   ├── config/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── services/             # AI Service (OpenAI / Groq)
+├── backend/                   # Node.js + Express API
+│   ├── config/                # Database connection
+│   ├── controllers/           # Business logic
+│   ├── middleware/            # Auth + Error handling
+│   ├── models/                # User + Attempt (MongoDB)
+│   ├── routes/                # API routes
+│   ├── services/              # AI service (OpenAI / Groq)
 │   ├── app.js
-│   └── server.js
+│   ├── server.js
+│   ├── package.json
+│   └── .env.example
 │
-├── package.json              # Backend dependencies
-├── .env.example
 └── README.md
 ```
 
-## Quick Start
+---
 
-### 1. Backend Setup
+## Features
+
+- JWT Authentication (Register / Login)
+- AI Question Generator (by role + level)
+- AI Answer Evaluation (score + strengths + improvements + sample answer)
+- Dashboard with statistics
+- Full Attempt History (CRUD)
+- Clean modern UI
+
+---
+
+## How to Run
+
+### 1. Backend
 
 ```bash
-# Install backend dependencies
+cd backend
 npm install
-
-# Configure environment
 cp .env.example .env
-# Edit .env → add MONGODB_URI, JWT_SECRET, and OPENAI_API_KEY or GROQ_API_KEY
-
-# Start backend
-npm run dev
-# → http://localhost:5000
 ```
 
-### 2. Frontend Setup
+Edit `.env` and add:
+- `MONGODB_URI` (local MongoDB or MongoDB Atlas)
+- `JWT_SECRET`
+- `OPENAI_API_KEY` **or** `GROQ_API_KEY`
+
+```bash
+npm run dev
+```
+
+Backend runs at → **http://localhost:5000**
+
+### 2. Frontend
 
 ```bash
 cd frontend
 npm install
 npm start
-# → http://localhost:4200
 ```
 
-### 3. Open the App
+Frontend runs at → **http://localhost:4200**
 
-Go to **http://localhost:4200**
+### 3. Use the App
 
-1. Register a new account
-2. Go to **Practice**
-3. Enter a role (e.g. "Data Engineer")
-4. Generate questions → Answer → Get AI feedback
-5. Check Dashboard & History
+1. Open http://localhost:4200
+2. Register a new account
+3. Go to **Practice**
+4. Enter a role (e.g. `Data Engineer`)
+5. Generate questions → Answer → Get AI feedback
+6. Check **Dashboard** and **History**
+
+---
 
 ## API Endpoints
 
-| Method | Endpoint                  | Description                     | Auth |
-|--------|---------------------------|---------------------------------|------|
-| POST   | `/api/auth/register`      | Register                        | No   |
-| POST   | `/api/auth/login`         | Login                           | No   |
-| GET    | `/api/auth/me`            | Current user                    | Yes  |
-| POST   | `/api/questions/generate` | Generate questions              | Yes  |
-| POST   | `/api/attempts`           | Submit answer + AI evaluation   | Yes  |
-| GET    | `/api/attempts`           | Get attempt history             | Yes  |
-| GET    | `/api/attempts/stats`     | Dashboard statistics            | Yes  |
-| GET    | `/api/attempts/:id`       | Single attempt                  | Yes  |
-| PUT    | `/api/attempts/:id`       | Update answer + re-evaluate     | Yes  |
-| DELETE | `/api/attempts/:id`       | Delete attempt                  | Yes  |
+| Method | Endpoint                  | Description                    | Auth |
+|--------|---------------------------|--------------------------------|------|
+| POST   | `/api/auth/register`      | Register new user              | No   |
+| POST   | `/api/auth/login`         | Login                          | No   |
+| GET    | `/api/auth/me`            | Get current user               | Yes  |
+| POST   | `/api/questions/generate` | Generate interview questions   | Yes  |
+| POST   | `/api/attempts`           | Submit answer + AI evaluation  | Yes  |
+| GET    | `/api/attempts`           | Get attempt history            | Yes  |
+| GET    | `/api/attempts/stats`     | Dashboard statistics           | Yes  |
+| GET    | `/api/attempts/:id`       | Get single attempt             | Yes  |
+| PUT    | `/api/attempts/:id`       | Update answer + re-evaluate    | Yes  |
+| DELETE | `/api/attempts/:id`       | Delete attempt                 | Yes  |
 
-## Environment Variables
+---
 
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/smart-interview-prep
-JWT_SECRET=your_secret_key
-AI_PROVIDER=openai          # or "groq"
-OPENAI_API_KEY=sk-...
-# GROQ_API_KEY=gsk_...
-```
+## Tech Stack
 
-## Interview Talking Points
+| Layer      | Technology              |
+|------------|-------------------------|
+| Frontend   | Angular 18 (Standalone) |
+| Backend    | Node.js + Express       |
+| Database   | MongoDB + Mongoose      |
+| Auth       | JWT + bcrypt            |
+| AI         | OpenAI / Groq           |
 
-- Full MEAN stack implementation
-- JWT authentication with protected routes
-- AI integration (prompt engineering + structured JSON output)
-- Clean separation of concerns (services, controllers, models)
-- Angular standalone components + signals + functional interceptors/guards
-- MongoDB indexing strategy
-- Error handling & rate limiting
+---
+
+## Interview Explanation
+
+> "I built a full-stack interview preparation system using Angular, Node.js, and MongoDB.  
+> The frontend allows users to select a role and answer questions.  
+> The backend provides REST APIs to generate questions, evaluate answers using AI, and store user attempts.  
+> I structured the backend using routes, controllers, and models for scalability."
+
+---
 
 ## Author
 
